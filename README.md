@@ -36,6 +36,10 @@ python analyze.py
 
 Regenerates `data/processed/results.json` and `web/results.json` from the committed raw data. Data collection itself was performed via the Claude Agent tool (see `data/raw/critiques.json` and `data/raw/verdicts.json` for the full raw record, including exactly which critiques were corrupted and how).
 
+## Handoff and operations
+
+See [`docs/runbook.md`](./docs/runbook.md) for local verification, static deployment notes, maintenance expectations, and owner handoff guidance. A ready-to-copy GitHub Actions workflow template lives at [`docs/github-actions-verify.yml`](./docs/github-actions-verify.yml); it reruns the analysis and fails if generated outputs are not committed.
+
 ## Repo layout
 
 ```
