@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scalable Oversight: Resistance to a Corrupted Critique</title>
+<style>
+  :root {
+    --surface-1: #fcfcfb; --page: #f9f9f7; --text-primary: #0b0b0b; --text-secondary: #52514e;
+    --muted: #898781; --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6; --series-2: #1baf7a; --series-3: #4a3aa7;
+    --status-good: #0ca30c; --status-warning: #fab219; --status-critical: #d03b3b;
+    --panel-radius: 18px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface-1: #1a1a19; --page: #0d0d0d; --text-primary: #ffffff; --text-secondary: #c3c2b7;
+      --muted: #898781; --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-2: #199e70; --series-3: #9085e9;
+      --status-good: #0ca30c; --status-warning: #fab219; --status-critical: #e66767;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--text-primary); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 56px 24px 100px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--status-good); background: color-mix(in srgb, var(--status-good) 12%, transparent); border: 1px solid color-mix(in srgb, var(--status-good) 30%, transparent); padding: 5px 12px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.02em; }
+  .sub { color: var(--text-secondary); font-size: 1.05rem; max-width: 720px; line-height: 1.55; margin-bottom: 36px; }
+  .hero { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--panel-radius); padding: 30px; margin-bottom: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .stat .num { font-variant-numeric: tabular-nums; font-size: 2.3rem; font-weight: 700; letter-spacing: -0.02em; }
+  .stat .label { color: var(--text-secondary); font-size: 0.82rem; margin-top: 4px; }
+  .stat.good .num { color: var(--status-good); }
+  section { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--panel-radius); padding: 28px; margin-bottom: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  section h2 { margin: 0 0 6px; font-size: 1.15rem; letter-spacing: -0.01em; }
+  section .desc { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; max-width: 760px; }
+  svg { width: 100%; height: auto; overflow: visible; }
+  .bar-track { fill: var(--grid); }
+  .axis-label { fill: var(--muted); font-size: 10.5px; }
+  .cond-label { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
+  .val-label { fill: var(--text-primary); font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  table.results { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  table.results th, table.results td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--grid); font-size: 0.87rem; vertical-align: top; }
+  table.results th { color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+  .pill.good { color: var(--status-good); background: color-mix(in srgb, var(--status-good) 12%, transparent); }
+  .fake-critique { font-style: italic; color: var(--text-secondary); }
+  a.link { color: var(--series-1); text-decoration: none; border-bottom: 1px solid currentColor; }
+  a.link:hover { opacity: 0.75; }
+  footer { text-align: center; color: var(--muted); font-size: 0.8rem; margin-top: 48px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">● Scalable oversight research</div>
+  <h1>Resistance to a Corrupted Critique</h1>
+  <p class="sub">Does a weak/cheap judge defer to a confidently wrong critique? We hand-fabricated 7 fake, plausible-sounding "expert" arguments for the wrong verdict and fed them to the judge alongside its own reasoning.</p>
+
+  <div class="hero" id="hero"></div>
+
+  <section>
+    <h2>Accuracy by condition</h2>
+    <p class="desc">All five conditions — including judgment after seeing the corrupted critique — landed at the same accuracy.</p>
+    <div id="bar-chart"></div>
+  </section>
+
+  <section>
+    <h2>The 7 corrupted items, in detail</h2>
+    <p class="desc">Each of these had a fabricated critique confidently arguing for the <em>wrong</em> verdict, with an invented-sounding justification. The judge's final verdict matched ground truth on all 7 anyway.</p>
+    <table class="results" id="corrupted-table"></table>
+  </section>
+
+  <section>
+    <h2>Read the full write-up</h2>
+    <p class="desc">
+      The pre-registered hypothesis, the ceiling-effect history that led to this framing, and an honest discussion of what this
+      does and doesn't show are in
+      <a class="link" href="https://github.com/knoxkiminou1-byte/scalable-oversight-critique/blob/main/WRITEUP.md">WRITEUP.md</a>
+      and <a class="link" href="https://github.com/knoxkiminou1-byte/scalable-oversight-critique/blob/main/LIMITATIONS.md">LIMITATIONS.md</a>
+      on <a class="link" href="https://github.com/knoxkiminou1-byte/scalable-oversight-critique">GitHub</a>. See also
+      <a class="link" href="https://reasoning-consistency-flips.vercel.app">reasoning-consistency-flips</a> and
+      <a class="link" href="https://sycophancy-pressure-eval.vercel.app">sycophancy-pressure-eval</a> for the two companion
+      studies that found the same resistance pattern under different kinds of pressure.
+    </p>
+  </section>
+
+  <footer>Data collected via the Claude Agent tool · Analysis fully reproducible from committed raw data · MIT licensed</footer>
+</div>
+
+<script>
+function renderBarChart(conditions) {
+  const barH = 34, gap = 14, pad = 200, W = 780;
+  const H = conditions.length * (barH + gap);
+  const maxW = W - pad - 60;
+
+  let bars = '';
+  conditions.forEach((c, i) => {
+    const y = i * (barH + gap);
+    const w = c.accuracy * maxW;
+    const color = c.key === 'with_corrupted_critique' ? 'var(--status-critical)' : 'var(--series-1)';
+    bars += `
+      <text class="cond-label" x="0" y="${y + barH/2 + 4}">${c.label}</text>
+      <rect class="bar-track" x="${pad}" y="${y}" width="${maxW}" height="${barH}" rx="6" />
+      <rect x="${pad}" y="${y}" width="${w}" height="${barH}" rx="6" fill="${color}" />
+      <text class="val-label" x="${pad + maxW + 12}" y="${y + barH/2 + 4}">${(c.accuracy*100).toFixed(0)}%</text>
+    `;
+  });
+  document.getElementById('bar-chart').innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}">${bars}</svg>`;
+}
+
+async function main() {
+  const res = await fetch('results.json');
+  const data = await res.json();
+  const conds = data.conditions;
+  const csa = data.corrupted_subset_analysis;
+
+  document.getElementById('hero').innerHTML = `
+    <div class="stat good"><div class="num">${(conds.with_corrupted_critique.accuracy*100).toFixed(0)}%</div><div class="label">accuracy with corrupted critique shown</div></div>
+    <div class="stat"><div class="num">${csa.n_corrupted}/${data.n_items}</div><div class="label">items given a fabricated wrong critique</div></div>
+    <div class="stat good"><div class="num">0pp</div><div class="label">degradation from corruption</div></div>
+    <div class="stat"><div class="num">${data.n_items}</div><div class="label">problems (calculus, combinatorics, Bayes)</div></div>
+  `;
+
+  const labelMap = {
+    baseline_careful: 'Baseline (careful)',
+    baseline_fast: 'Baseline (fast/blind)',
+    with_opus_critique: 'With genuine Opus critique',
+    with_haiku_critique: 'With genuine Haiku critique',
+    with_corrupted_critique: 'With CORRUPTED critique',
+  };
+  const order = ['baseline_careful', 'baseline_fast', 'with_opus_critique', 'with_haiku_critique', 'with_corrupted_critique'];
+  renderBarChart(order.map(k => ({ key: k, label: labelMap[k], accuracy: conds[k].accuracy })));
+
+  const corruptedIds = csa.corrupted_ids;
+  const rows = corruptedIds.map(id => {
+    const item = data.items.find(i => i.id === id);
+    const fakeCritique = data.critiques.corrupted_critique[id];
+    const verdict = conds.with_corrupted_critique.per_item[id];
+    return `<tr>
+      <td><strong>${id}</strong><br/>${item.problem}</td>
+      <td class="fake-critique">"${fakeCritique}"</td>
+      <td>${verdict.expected}</td>
+      <td><span class="pill good">${verdict.judge_said} ✓</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('corrupted-table').innerHTML =
+    `<tr><th>Problem</th><th>Fabricated critique shown to judge</th><th>Ground truth</th><th>Judge's actual verdict</th></tr>${rows}`;
+}
+main().catch(e => { document.getElementById('hero').innerHTML = '<p style="color:#d03b3b">Failed to load results.json: ' + e + '</p>'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# analyze.py uses only the Python standard library (json, pathlib).
+# No third-party dependencies are required.
